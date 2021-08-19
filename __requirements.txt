@@ -1,0 +1,2 @@
+config.py
+; add your token in `token="token"` inside of config.py
