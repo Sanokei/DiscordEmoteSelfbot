@@ -3,7 +3,6 @@
 
 # In[ ]:
 
-import os
 
 import discord
 
@@ -13,9 +12,9 @@ import images
 
 # In[ ]:
 
+
 class Client(discord.Client):
     async def on_connect(self):
-        os.system('clear')
         print(f"""
             Client has successfully logged in as {client.user.name}#{client.user.discriminator}
             Your discord ID is {client.user.id}
@@ -26,36 +25,30 @@ class Client(discord.Client):
             return
         
         if message.content.count(config.prefix) >= 2:
-            emote_text_list = message.content.split(config.prefix)
-            if emote_text_list[0] != "":
-                first = emote_text_list[0]
-            emote_text_list.pop(0)
-                
-            if emote_text_list[len(emote_text_list) - 1] != "":
-                last = emote_text_list[len(emote_text_list) - 1]
-            emote_text_list.pop()
-
-            ### 
-            for index,emote_text in enumerate(emote_text_list[::2]):
+            emote_text = message.content
+            emote_text_list = []
+            for index in message.content.split(config.prefix):
                 for image_name, image_value in images.emotes:
-                    if image_name in emote_text.lower().replace(" ",""):
-                        emote_text_list[index] = image_value
-            ###
+                    if emote_text.count(config.prefix) >= 2:
+                        emote_text.replace(config.prefix+image_name+config.prefix,config.prefix+image_value+config.prefix)
+                        emote_text_list = emote_text.split(config.prefix,2)
+                        final_list = emote_text_list
+                        emote_text = emote_text_list[2]
+                        emote_text_list = []
                         
-            if 'first' in locals():
-                emote_text_list.insert(0,first)
-                
-            if 'last' in locals():
-                emote_text_list.append(last)
-                
             await message.delete()
+            await message.channel.send(text)
+            
+            for index,text in enumerate(emote_text_list[1::]):
+                    if "https://cdn.discordapp.com/emojis/" not in text[index-1]:
+                        emote_text_list[index-1 : index] = [reduce(lambda i, j: i + j, emote_text_list[index-1 : index])]   
             
             for text in emote_text_list:
                 await message.channel.send(text)
-            
 
 
 # In[ ]:
+
 
 client = Client()
 try:
