@@ -27,24 +27,23 @@ class Client(discord.Client):
         if message.content.count(config.prefix) >= 2:
             emote_text = message.content
             emote_text_list = []
+            final_list = []
+            
             for index in message.content.split(config.prefix):
                 for image_name, image_value in images.emotes:
-                    if emote_text.count(config.prefix) >= 2:
-                        emote_text.replace(config.prefix+image_name+config.prefix,config.prefix+image_value+config.prefix)
-                        emote_text_list = emote_text.split(config.prefix,2)
-                        final_list = emote_text_list
-                        emote_text = emote_text_list[2]
+                    if emote_text.count(config.prefix) >= 2 and config.prefix+image_name+config.prefix in emote_text:
+                        emote_text = emote_text.replace(config.prefix+image_name+config.prefix,"\\"+image_value+"\\")
+                        emote_text_list = emote_text.split("\\")
+                        final_list += emote_text_list
+                        emote_text = emote_text_list[len(emote_text_list)-1]
                         emote_text_list = []
                         
-            await message.delete()
-            await message.channel.send(text)
-            
-            for index,text in enumerate(emote_text_list[1::]):
-                    if "https://cdn.discordapp.com/emojis/" not in text[index-1]:
-                        emote_text_list[index-1 : index] = [reduce(lambda i, j: i + j, emote_text_list[index-1 : index])]   
-            
-            for text in emote_text_list:
-                await message.channel.send(text)
+            if(len(final_list) > 0):           
+                await message.delete()
+                
+                for text in final_list:
+                    if text != "":
+                        await message.channel.send(text)
 
 
 # In[ ]:
