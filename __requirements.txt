@@ -1,2 +1,4 @@
 config.py
-; add your token in `token="token"` inside of config.py
+; inside of config.py
+; add your discord token as `token="token"`
+; also add your prefrenced prefix as `prefix="prefix"`
