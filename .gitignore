@@ -3,3 +3,5 @@ config.ipynb
 config.py
 images.ipynb
 .ipynb_checkpoints/config-checkpoint.ipynb
+**/.ipynb_checkpoints
+**/__pycache__
