@@ -3,6 +3,7 @@
 
 # In[ ]:
 
+import os
 
 import discord
 
@@ -11,7 +12,6 @@ import images
 
 
 # In[ ]:
-
 
 class Client(discord.Client):
     async def on_connect(self):
@@ -27,14 +27,27 @@ class Client(discord.Client):
         
         if message.content.count(config.prefix) >= 2:
             emote_text_list = message.content.split(config.prefix)
-            if message.content.count(config.prefix) % 2 == 1:
+            if emote_text_list[0] != "":
+                first = emote_text_list[0]
+            emote_text_list.pop(0)
+                
+            if emote_text_list[len(emote_text_list) - 1] != "":
                 last = emote_text_list[len(emote_text_list) - 1]
-                emote_text_list.pop()
+            emote_text_list.pop()
+
+            ### 
             for index,emote_text in enumerate(emote_text_list[::2]):
                 for image_name, image_value in images.emotes:
                     if image_name in emote_text.lower().replace(" ",""):
                         emote_text_list[index] = image_value
-            emote_text_list.append(last)
+            ###
+                        
+            if 'first' in locals():
+                emote_text_list.insert(0,first)
+                
+            if 'last' in locals():
+                emote_text_list.append(last)
+                
             await message.delete()
             
             for text in emote_text_list:
@@ -43,7 +56,6 @@ class Client(discord.Client):
 
 
 # In[ ]:
-
 
 client = Client()
 try:
