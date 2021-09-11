@@ -29,9 +29,8 @@ class Client(discord.Client):
             
             for image_name, image_value in images.emotes:
                 if config.prefix+image_name+config.prefix in emote_text:
-                    if emote_text.count(config.prefix) >= 2:
-                        emote_text = emote_text.replace(config.prefix+image_name+config.prefix,"\\"+image_value+"\\")
-                    final_list = emote_text.split("\\")
+                    emote_text = emote_text.replace(config.prefix+image_name+config.prefix,"\\"+image_value+"\\")
+                final_list = emote_text.split("\\")
                         
             if(len(final_list) > 0):           
                 await message.delete()
